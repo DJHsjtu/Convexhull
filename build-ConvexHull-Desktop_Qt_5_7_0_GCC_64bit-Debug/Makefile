@@ -33,7 +33,7 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = ConvexHull1.0.0
-DISTDIR = /home/ale/Downloads/Project/build-ConvexHull-Desktop_Qt_5_7_0_GCC_64bit-Debug/.tmp/ConvexHull1.0.0
+DISTDIR = /home/ale/Desktop/ConvexhullProject/build-ConvexHull-Desktop_Qt_5_7_0_GCC_64bit-Debug/.tmp/ConvexHull1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/home/ale/Qt/5.7/gcc_64/lib
 LIBS          = $(SUBLIBS) /usr/lib/x86_64-linux-gnu/libGLU.so -lboost_system -frounding-math -lgmp -lQGLViewer -lCGAL -L/home/ale/Qt/5.7/gcc_64/lib -lQt5OpenGL -L/usr/lib64 -lQt5Widgets -lQt5Gui -lQt5Xml -lQt5Core -lGL -lpthread 
@@ -60,7 +60,8 @@ SOURCES       = ../ConvexHull/GUI/managers/dcelmanager.cpp \
 		../ConvexHull/lib/dcel/drawable_dcel.cpp \
 		../ConvexHull/common.cpp \
 		../ConvexHull/main.cpp \
-		../ConvexHull/convexhull/convexhullbuilder.cpp moc_dcelmanager.cpp \
+		../ConvexHull/convexhull/convexhullbuilder.cpp \
+		../ConvexHull/convexhull/conflictgraph.cpp moc_dcelmanager.cpp \
 		moc_convexhullmanager.cpp \
 		moc_windowmanager.cpp \
 		moc_mainwindow.cpp
@@ -77,6 +78,7 @@ OBJECTS       = dcelmanager.o \
 		common.o \
 		main.o \
 		convexhullbuilder.o \
+		conflictgraph.o \
 		moc_dcelmanager.o \
 		moc_convexhullmanager.o \
 		moc_windowmanager.o \
@@ -255,7 +257,8 @@ DIST          = ../ConvexHull/README.txt \
 		../ConvexHull/lib/common/common.h \
 		../ConvexHull/common.h \
 		../ConvexHull/lib/common/serialize.h \
-		../ConvexHull/convexhull/convexhullbuilder.h ../ConvexHull/GUI/managers/dcelmanager.cpp \
+		../ConvexHull/convexhull/convexhullbuilder.h \
+		../ConvexHull/convexhull/conflictgraph.h ../ConvexHull/GUI/managers/dcelmanager.cpp \
 		../ConvexHull/GUI/managers/convexhullmanager.cpp \
 		../ConvexHull/GUI/managers/windowmanager.cpp \
 		../ConvexHull/GUI/glcanvas.cpp \
@@ -267,7 +270,8 @@ DIST          = ../ConvexHull/README.txt \
 		../ConvexHull/lib/dcel/drawable_dcel.cpp \
 		../ConvexHull/common.cpp \
 		../ConvexHull/main.cpp \
-		../ConvexHull/convexhull/convexhullbuilder.cpp
+		../ConvexHull/convexhull/convexhullbuilder.cpp \
+		../ConvexHull/convexhull/conflictgraph.cpp
 QMAKE_TARGET  = ConvexHull
 DESTDIR       = 
 TARGET        = ConvexHull
@@ -606,8 +610,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../ConvexHull/GUI/managers/dcelmanager.h ../ConvexHull/GUI/managers/convexhullmanager.h ../ConvexHull/GUI/managers/windowmanager.h ../ConvexHull/GUI/objects/cylinder.h ../ConvexHull/GUI/objects/sphere.h ../ConvexHull/GUI/glcanvas.h ../ConvexHull/GUI/mainwindow.h ../ConvexHull/lib/common/bounding_box.h ../ConvexHull/lib/common/comparators.h ../ConvexHull/lib/common/drawable_object.h ../ConvexHull/lib/common/point.h ../ConvexHull/lib/common/timer.h ../ConvexHull/lib/dcel/dcel.h ../ConvexHull/lib/dcel/dcel_face.h ../ConvexHull/lib/dcel/dcel_face_iterators.h ../ConvexHull/lib/dcel/dcel_half_edge.h ../ConvexHull/lib/dcel/dcel_iterators.h ../ConvexHull/lib/dcel/dcel_struct.h ../ConvexHull/lib/dcel/dcel_vertex.h ../ConvexHull/lib/dcel/dcel_vertex_iterators.h ../ConvexHull/lib/dcel/drawable_dcel.h ../ConvexHull/lib/common/common.h ../ConvexHull/common.h ../ConvexHull/lib/common/serialize.h ../ConvexHull/convexhull/convexhullbuilder.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../ConvexHull/GUI/managers/dcelmanager.cpp ../ConvexHull/GUI/managers/convexhullmanager.cpp ../ConvexHull/GUI/managers/windowmanager.cpp ../ConvexHull/GUI/glcanvas.cpp ../ConvexHull/GUI/mainwindow.cpp ../ConvexHull/lib/dcel/dcel_face.cpp ../ConvexHull/lib/dcel/dcel_half_edge.cpp ../ConvexHull/lib/dcel/dcel_vertex.cpp ../ConvexHull/lib/dcel/dcel_struct.cpp ../ConvexHull/lib/dcel/drawable_dcel.cpp ../ConvexHull/common.cpp ../ConvexHull/main.cpp ../ConvexHull/convexhull/convexhullbuilder.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../ConvexHull/GUI/managers/dcelmanager.h ../ConvexHull/GUI/managers/convexhullmanager.h ../ConvexHull/GUI/managers/windowmanager.h ../ConvexHull/GUI/objects/cylinder.h ../ConvexHull/GUI/objects/sphere.h ../ConvexHull/GUI/glcanvas.h ../ConvexHull/GUI/mainwindow.h ../ConvexHull/lib/common/bounding_box.h ../ConvexHull/lib/common/comparators.h ../ConvexHull/lib/common/drawable_object.h ../ConvexHull/lib/common/point.h ../ConvexHull/lib/common/timer.h ../ConvexHull/lib/dcel/dcel.h ../ConvexHull/lib/dcel/dcel_face.h ../ConvexHull/lib/dcel/dcel_face_iterators.h ../ConvexHull/lib/dcel/dcel_half_edge.h ../ConvexHull/lib/dcel/dcel_iterators.h ../ConvexHull/lib/dcel/dcel_struct.h ../ConvexHull/lib/dcel/dcel_vertex.h ../ConvexHull/lib/dcel/dcel_vertex_iterators.h ../ConvexHull/lib/dcel/drawable_dcel.h ../ConvexHull/lib/common/common.h ../ConvexHull/common.h ../ConvexHull/lib/common/serialize.h ../ConvexHull/convexhull/convexhullbuilder.h ../ConvexHull/convexhull/conflictgraph.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../ConvexHull/GUI/managers/dcelmanager.cpp ../ConvexHull/GUI/managers/convexhullmanager.cpp ../ConvexHull/GUI/managers/windowmanager.cpp ../ConvexHull/GUI/glcanvas.cpp ../ConvexHull/GUI/mainwindow.cpp ../ConvexHull/lib/dcel/dcel_face.cpp ../ConvexHull/lib/dcel/dcel_half_edge.cpp ../ConvexHull/lib/dcel/dcel_vertex.cpp ../ConvexHull/lib/dcel/dcel_struct.cpp ../ConvexHull/lib/dcel/drawable_dcel.cpp ../ConvexHull/common.cpp ../ConvexHull/main.cpp ../ConvexHull/convexhull/convexhullbuilder.cpp ../ConvexHull/convexhull/conflictgraph.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../ConvexHull/GUI/managers/dcelmanager.ui ../ConvexHull/GUI/managers/convexhullmanager.ui ../ConvexHull/GUI/managers/windowmanager.ui ../ConvexHull/GUI/mainwindow.ui $(DISTDIR)/
 
 
@@ -781,9 +785,10 @@ moc_dcelmanager.cpp: ../../../Qt/5.7/gcc_64/include/QtWidgets/QFrame \
 		../ConvexHull/GUI/managers/dcelmanager.h \
 		../ConvexHull/lib/common/timer.h \
 		../../../Qt/5.7/gcc_64/include/QtCore/QString \
+		../ConvexHull/convexhull/convexhullbuilder.h \
 		../ConvexHull/GUI/managers/dcelmanager.h \
 		../../../Qt/5.7/gcc_64/bin/moc
-	/home/ale/Qt/5.7/gcc_64/bin/moc $(DEFINES) -I/home/ale/Qt/5.7/gcc_64/mkspecs/linux-g++ -I/home/ale/Downloads/Project/ConvexHull -I/home/ale/Qt/5.7/gcc_64/include -I/home/ale/Qt/5.7/gcc_64/include/QtOpenGL -I/home/ale/Qt/5.7/gcc_64/include/QtWidgets -I/home/ale/Qt/5.7/gcc_64/include/QtGui -I/home/ale/Qt/5.7/gcc_64/include/QtXml -I/home/ale/Qt/5.7/gcc_64/include/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ConvexHull/GUI/managers/dcelmanager.h -o moc_dcelmanager.cpp
+	/home/ale/Qt/5.7/gcc_64/bin/moc $(DEFINES) -I/home/ale/Qt/5.7/gcc_64/mkspecs/linux-g++ -I/home/ale/Desktop/ConvexhullProject/ConvexHull -I/home/ale/Qt/5.7/gcc_64/include -I/home/ale/Qt/5.7/gcc_64/include/QtOpenGL -I/home/ale/Qt/5.7/gcc_64/include/QtWidgets -I/home/ale/Qt/5.7/gcc_64/include/QtGui -I/home/ale/Qt/5.7/gcc_64/include/QtXml -I/home/ale/Qt/5.7/gcc_64/include/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ConvexHull/GUI/managers/dcelmanager.h -o moc_dcelmanager.cpp
 
 moc_convexhullmanager.cpp: ../../../Qt/5.7/gcc_64/include/QtWidgets/QFrame \
 		../../../Qt/5.7/gcc_64/include/QtWidgets/qframe.h \
@@ -929,9 +934,10 @@ moc_convexhullmanager.cpp: ../../../Qt/5.7/gcc_64/include/QtWidgets/QFrame \
 		../ConvexHull/GUI/managers/convexhullmanager.h \
 		../ConvexHull/lib/common/timer.h \
 		../../../Qt/5.7/gcc_64/include/QtCore/QString \
+		../ConvexHull/convexhull/convexhullbuilder.h \
 		../ConvexHull/GUI/managers/convexhullmanager.h \
 		../../../Qt/5.7/gcc_64/bin/moc
-	/home/ale/Qt/5.7/gcc_64/bin/moc $(DEFINES) -I/home/ale/Qt/5.7/gcc_64/mkspecs/linux-g++ -I/home/ale/Downloads/Project/ConvexHull -I/home/ale/Qt/5.7/gcc_64/include -I/home/ale/Qt/5.7/gcc_64/include/QtOpenGL -I/home/ale/Qt/5.7/gcc_64/include/QtWidgets -I/home/ale/Qt/5.7/gcc_64/include/QtGui -I/home/ale/Qt/5.7/gcc_64/include/QtXml -I/home/ale/Qt/5.7/gcc_64/include/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ConvexHull/GUI/managers/convexhullmanager.h -o moc_convexhullmanager.cpp
+	/home/ale/Qt/5.7/gcc_64/bin/moc $(DEFINES) -I/home/ale/Qt/5.7/gcc_64/mkspecs/linux-g++ -I/home/ale/Desktop/ConvexhullProject/ConvexHull -I/home/ale/Qt/5.7/gcc_64/include -I/home/ale/Qt/5.7/gcc_64/include/QtOpenGL -I/home/ale/Qt/5.7/gcc_64/include/QtWidgets -I/home/ale/Qt/5.7/gcc_64/include/QtGui -I/home/ale/Qt/5.7/gcc_64/include/QtXml -I/home/ale/Qt/5.7/gcc_64/include/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ConvexHull/GUI/managers/convexhullmanager.h -o moc_convexhullmanager.cpp
 
 moc_windowmanager.cpp: ../../../Qt/5.7/gcc_64/include/QtWidgets/QFrame \
 		../../../Qt/5.7/gcc_64/include/QtWidgets/qframe.h \
@@ -1056,7 +1062,7 @@ moc_windowmanager.cpp: ../../../Qt/5.7/gcc_64/include/QtWidgets/QFrame \
 		../ConvexHull/lib/common/bounding_box.h \
 		../ConvexHull/GUI/managers/windowmanager.h \
 		../../../Qt/5.7/gcc_64/bin/moc
-	/home/ale/Qt/5.7/gcc_64/bin/moc $(DEFINES) -I/home/ale/Qt/5.7/gcc_64/mkspecs/linux-g++ -I/home/ale/Downloads/Project/ConvexHull -I/home/ale/Qt/5.7/gcc_64/include -I/home/ale/Qt/5.7/gcc_64/include/QtOpenGL -I/home/ale/Qt/5.7/gcc_64/include/QtWidgets -I/home/ale/Qt/5.7/gcc_64/include/QtGui -I/home/ale/Qt/5.7/gcc_64/include/QtXml -I/home/ale/Qt/5.7/gcc_64/include/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ConvexHull/GUI/managers/windowmanager.h -o moc_windowmanager.cpp
+	/home/ale/Qt/5.7/gcc_64/bin/moc $(DEFINES) -I/home/ale/Qt/5.7/gcc_64/mkspecs/linux-g++ -I/home/ale/Desktop/ConvexhullProject/ConvexHull -I/home/ale/Qt/5.7/gcc_64/include -I/home/ale/Qt/5.7/gcc_64/include/QtOpenGL -I/home/ale/Qt/5.7/gcc_64/include/QtWidgets -I/home/ale/Qt/5.7/gcc_64/include/QtGui -I/home/ale/Qt/5.7/gcc_64/include/QtXml -I/home/ale/Qt/5.7/gcc_64/include/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ConvexHull/GUI/managers/windowmanager.h -o moc_windowmanager.cpp
 
 moc_mainwindow.cpp: ../../../Qt/5.7/gcc_64/include/QtWidgets/QMainWindow \
 		../../../Qt/5.7/gcc_64/include/QtWidgets/qmainwindow.h \
@@ -1177,7 +1183,7 @@ moc_mainwindow.cpp: ../../../Qt/5.7/gcc_64/include/QtWidgets/QMainWindow \
 		../ConvexHull/lib/common/bounding_box.h \
 		../ConvexHull/GUI/mainwindow.h \
 		../../../Qt/5.7/gcc_64/bin/moc
-	/home/ale/Qt/5.7/gcc_64/bin/moc $(DEFINES) -I/home/ale/Qt/5.7/gcc_64/mkspecs/linux-g++ -I/home/ale/Downloads/Project/ConvexHull -I/home/ale/Qt/5.7/gcc_64/include -I/home/ale/Qt/5.7/gcc_64/include/QtOpenGL -I/home/ale/Qt/5.7/gcc_64/include/QtWidgets -I/home/ale/Qt/5.7/gcc_64/include/QtGui -I/home/ale/Qt/5.7/gcc_64/include/QtXml -I/home/ale/Qt/5.7/gcc_64/include/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ConvexHull/GUI/mainwindow.h -o moc_mainwindow.cpp
+	/home/ale/Qt/5.7/gcc_64/bin/moc $(DEFINES) -I/home/ale/Qt/5.7/gcc_64/mkspecs/linux-g++ -I/home/ale/Desktop/ConvexhullProject/ConvexHull -I/home/ale/Qt/5.7/gcc_64/include -I/home/ale/Qt/5.7/gcc_64/include/QtOpenGL -I/home/ale/Qt/5.7/gcc_64/include/QtWidgets -I/home/ale/Qt/5.7/gcc_64/include/QtGui -I/home/ale/Qt/5.7/gcc_64/include/QtXml -I/home/ale/Qt/5.7/gcc_64/include/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ConvexHull/GUI/mainwindow.h -o moc_mainwindow.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -1425,6 +1431,7 @@ dcelmanager.o: ../ConvexHull/GUI/managers/dcelmanager.cpp ../ConvexHull/GUI/mana
 		../ConvexHull/GUI/managers/convexhullmanager.h \
 		../ConvexHull/lib/common/timer.h \
 		../../../Qt/5.7/gcc_64/include/QtCore/QString \
+		../ConvexHull/convexhull/convexhullbuilder.h \
 		ui_dcelmanager.h \
 		../../../Qt/5.7/gcc_64/include/QtCore/QVariant \
 		../../../Qt/5.7/gcc_64/include/QtWidgets/QAction \
@@ -1612,6 +1619,7 @@ convexhullmanager.o: ../ConvexHull/GUI/managers/convexhullmanager.cpp ../ConvexH
 		../../../Qt/5.7/gcc_64/include/QtWidgets/qcolordialog.h \
 		../ConvexHull/lib/common/timer.h \
 		../../../Qt/5.7/gcc_64/include/QtCore/QString \
+		../ConvexHull/convexhull/convexhullbuilder.h \
 		ui_convexhullmanager.h \
 		../../../Qt/5.7/gcc_64/include/QtCore/QVariant \
 		../../../Qt/5.7/gcc_64/include/QtWidgets/QAction \
@@ -2693,6 +2701,7 @@ main.o: ../ConvexHull/main.cpp ../ConvexHull/GUI/mainwindow.h \
 		../ConvexHull/GUI/managers/convexhullmanager.h \
 		../ConvexHull/lib/common/timer.h \
 		../../../Qt/5.7/gcc_64/include/QtCore/QString \
+		../ConvexHull/convexhull/convexhullbuilder.h \
 		../ConvexHull/GUI/managers/windowmanager.h \
 		../../../Qt/5.7/gcc_64/include/QtWidgets/QApplication \
 		../../../Qt/5.7/gcc_64/include/QtWidgets/qapplication.h \
@@ -2849,6 +2858,154 @@ convexhullbuilder.o: ../ConvexHull/convexhull/convexhullbuilder.cpp ../ConvexHul
 		../ConvexHull/lib/common/timer.h \
 		../../../Qt/5.7/gcc_64/include/QtCore/QString
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o convexhullbuilder.o ../ConvexHull/convexhull/convexhullbuilder.cpp
+
+conflictgraph.o: ../ConvexHull/convexhull/conflictgraph.cpp ../ConvexHull/convexhull/conflictgraph.h \
+		../ConvexHull/GUI/managers/dcelmanager.h \
+		../../../Qt/5.7/gcc_64/include/QtWidgets/QFrame \
+		../../../Qt/5.7/gcc_64/include/QtWidgets/qframe.h \
+		../../../Qt/5.7/gcc_64/include/QtWidgets/qwidget.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qwindowdefs.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qglobal.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qconfig.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qfeatures.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qtypetraits.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qisenum.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qsysinfo.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qlogging.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qflags.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qatomic.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qmutex.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qnumeric.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qversiontagging.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qobjectdefs.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qnamespace.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qwindowdefs_win.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qobject.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qstring.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qchar.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qbytearray.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qrefcount.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qarraydata.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qlist.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qalgorithms.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qiterator.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qhashfunctions.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qpair.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qbytearraylist.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qstringlist.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qregexp.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qstringmatcher.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qcoreevent.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qscopedpointer.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qmetatype.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qobject_impl.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qmargins.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qpaintdevice.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qrect.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qsize.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qpoint.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qpalette.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qcolor.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qrgb.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qrgba64.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qbrush.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qvector.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qmatrix.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qpolygon.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qregion.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qdatastream.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qiodevice.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qline.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qtransform.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qpainterpath.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qimage.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qpixelformat.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qpixmap.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qsharedpointer.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qshareddata.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qhash.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qfont.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qfontmetrics.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qfontinfo.h \
+		../../../Qt/5.7/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qcursor.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qkeysequence.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qevent.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qvariant.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qmap.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qdebug.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qtextstream.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qlocale.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qset.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qurl.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qurlquery.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qfile.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qfiledevice.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qvector2d.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qtouchdevice.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/QColor \
+		../ConvexHull/lib/dcel/drawable_dcel.h \
+		../ConvexHull/lib/common/pickable_object.h \
+		../ConvexHull/lib/common/drawable_object.h \
+		../ConvexHull/lib/common/point.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/QDebug \
+		../ConvexHull/lib/common/serialize.h \
+		../ConvexHull/lib/common/common.h \
+		../ConvexHull/GUI/objects/sphere.h \
+		../ConvexHull/GUI/objects/cylinder.h \
+		../ConvexHull/lib/dcel/dcel.h \
+		../ConvexHull/lib/dcel/dcel_face_iterators.h \
+		../ConvexHull/lib/dcel/dcel_face.h \
+		../ConvexHull/lib/dcel/dcel_struct.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/QFileInfo \
+		../../../Qt/5.7/gcc_64/include/QtCore/qfileinfo.h \
+		../ConvexHull/lib/common/bounding_box.h \
+		../ConvexHull/lib/dcel/dcel_iterators.h \
+		../ConvexHull/lib/dcel/dcel_half_edge.h \
+		../ConvexHull/lib/dcel/dcel_vertex_iterators.h \
+		../ConvexHull/lib/dcel/dcel_vertex.h \
+		../ConvexHull/GUI/mainwindow.h \
+		../../../Qt/5.7/gcc_64/include/QtWidgets/QMainWindow \
+		../../../Qt/5.7/gcc_64/include/QtWidgets/qmainwindow.h \
+		../../../Qt/5.7/gcc_64/include/QtWidgets/qtabwidget.h \
+		../../../Qt/5.7/gcc_64/include/QtGui/qicon.h \
+		../../../Qt/5.7/gcc_64/include/QtWidgets/QDockWidget \
+		../../../Qt/5.7/gcc_64/include/QtWidgets/qdockwidget.h \
+		../../../Qt/5.7/gcc_64/include/QtWidgets/QToolBox \
+		../../../Qt/5.7/gcc_64/include/QtWidgets/qtoolbox.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/QSignalMapper \
+		../../../Qt/5.7/gcc_64/include/QtCore/qsignalmapper.h \
+		../../../Qt/5.7/gcc_64/include/QtWidgets/QCheckBox \
+		../../../Qt/5.7/gcc_64/include/QtWidgets/qcheckbox.h \
+		../../../Qt/5.7/gcc_64/include/QtWidgets/qabstractbutton.h \
+		../ConvexHull/common.h \
+		../../../Qt/5.7/gcc_64/include/QtWidgets/QFileDialog \
+		../../../Qt/5.7/gcc_64/include/QtWidgets/qfiledialog.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/qdir.h \
+		../../../Qt/5.7/gcc_64/include/QtWidgets/qdialog.h \
+		../../../Qt/5.7/gcc_64/include/QtWidgets/QColorDialog \
+		../../../Qt/5.7/gcc_64/include/QtWidgets/qcolordialog.h \
+		../ConvexHull/GUI/managers/convexhullmanager.h \
+		../ConvexHull/lib/common/timer.h \
+		../../../Qt/5.7/gcc_64/include/QtCore/QString \
+		../ConvexHull/convexhull/convexhullbuilder.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o conflictgraph.o ../ConvexHull/convexhull/conflictgraph.cpp
 
 moc_dcelmanager.o: moc_dcelmanager.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_dcelmanager.o moc_dcelmanager.cpp
