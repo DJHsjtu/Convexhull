@@ -8,20 +8,15 @@ convexhullbuilder::convexhullbuilder(DrawableDcel * dcel)
 
 }
 
-void convexhullbuilder::build(MainWindow* mainWindow){
-
-    getVertices();
-    dcel->reset();
-    permuteVertices();
-    buildTetrahedron();
-
-            }
 void convexhullbuilder::build(){
 
     getVertices();
     dcel->reset();
     permuteVertices();
     buildTetrahedron();
+
+    conflictgraph cf(this->dcel,this->vect);
+    cf.inizialize();
 
             }
 
@@ -34,9 +29,6 @@ void::convexhullbuilder::getVertices(){
         this->vect.push_back(v->getCoordinate());
 
     }
-
-    std::cout << "n vertices: " << vect.size();
-
 
 }
 
@@ -62,13 +54,11 @@ void convexhullbuilder::permuteVertices(){
         }
 
        det=mat.determinant();
-       std::cout << "\ndeterminante : " << det;
 
         //finchè det <0 prendo altri punti dalla dcel
 
         coplanar= det < std::numeric_limits<double>::epsilon() && det > -std::numeric_limits<double>::epsilon();
 
-         std::cout << "\ncomplanari? : " << coplanar;
 
          if(coplanar){
 
@@ -90,9 +80,7 @@ void convexhullbuilder::buildTetrahedron(){
        Dcel::HalfEdge* he2In = this->dcel->addHalfEdge();
        Dcel::HalfEdge* he3In = this->dcel->addHalfEdge();
 
-       //check the orientation of the 4th point wrt the others
-       //to determine the base face orientation
-
+       //controllo l'orientamento del quarto punto rispetto agli altri per vedere il verso della faccia
        if (checkOrientationToNormal()){
 
            he1In->setFromVertex(b);
@@ -138,7 +126,7 @@ void convexhullbuilder::buildTetrahedron(){
        he2In->setFace(face1);
        he3In->setFace(face1);
 
-       //add new faces connecting each half edge to the fourth vertex
+
        addOtherFaceTetrahedron(d, he1In);
        addOtherFaceTetrahedron(d, he2In);
        addOtherFaceTetrahedron(d, he3In);
@@ -174,8 +162,7 @@ void convexhullbuilder::addOtherFaceTetrahedron(Dcel::Vertex* otherVertex, Dcel:
       startVertex->incrementCardinality();
       otherVertex->incrementCardinality();
 
-      //set the twin following the structure of the DCEL.
-      //firstly they can be null but they will be all set when all the faces are created
+      //seguendo la dcel setto i twin
       if(existingHe->getPrev()->getTwin() != nullptr){
           Dcel::HalfEdge* twin = existingHe->getPrev()->getTwin()->getPrev();
           he2->setTwin(twin);
@@ -191,8 +178,6 @@ void convexhullbuilder::addOtherFaceTetrahedron(Dcel::Vertex* otherVertex, Dcel:
       endVertex->incrementCardinality();
       otherVertex->incrementCardinality();
 
-      //set the twin following the structure of the DCEL.
-      //firstly they can be null but they will be all set when all the faces are created
       if(existingHe->getNext()->getTwin() != nullptr){
           Dcel::HalfEdge* twin = existingHe->getNext()->getTwin()->getNext();
           he3->setTwin(twin);

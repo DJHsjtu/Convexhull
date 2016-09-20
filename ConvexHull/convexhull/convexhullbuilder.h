@@ -13,13 +13,13 @@
 #include <iterator>
 #include <iostream>
 #include "GUI/mainwindow.h"
+#include "conflictgraph.h"
 
 class convexhullbuilder
 {
 public:
     convexhullbuilder(DrawableDcel* dcel);
     void build();
-   void build(MainWindow * mainWindow);
 
 private:
 
