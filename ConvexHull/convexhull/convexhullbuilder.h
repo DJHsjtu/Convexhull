@@ -12,25 +12,32 @@
 #include <vector>
 #include <iterator>
 #include <iostream>
-#include "GUI/mainwindow.h"
 #include "conflictgraph.h"
+#include "GUI/mainwindow.h"
 
-class convexhullbuilder
+class Convexhullbuilder
 {
 public:
-    convexhullbuilder(DrawableDcel* dcel);
-    void build();
+    Convexhullbuilder(DrawableDcel* dcel,bool isChecked);
+    ~Convexhullbuilder();
+    void build(MainWindow * mainWindow);
 
 private:
 
     DrawableDcel * dcel;
     std::vector<Pointd> vect;
-
+    ConflictGraph *conflictGraph;
+    bool isChecked;
     void getVertices();
     void permuteVertices();
     void buildTetrahedron();
     void addOtherFaceTetrahedron(Dcel::Vertex* otherVertex, Dcel::HalfEdge* existingHe);
+    Dcel::Face* addNewFaces(Dcel::Vertex* otherVertex, Dcel::HalfEdge* existingHe);
+    void setTwins(std::vector<Dcel::Face*> &faceList);
     bool checkOrientationToNormal();
+    std::list<Dcel::HalfEdge*> getHorizon(std::set<Dcel::Face*> *facesVisibleFromVertex);
+    std::map<Dcel::HalfEdge *, std::set<Pointd> *> getVertexMapFromHorizon(std::list<Dcel::HalfEdge*> horizon);
+    void removeVisibleFaces(std::set<Dcel::Face*>* faces);
 
 };
 

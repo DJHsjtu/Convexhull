@@ -6,7 +6,7 @@ CONFIG(debug, debug|release){
 }
 
 unix:!macx{
-    LIBS += /usr/lib/x86_64-linux-gnu/libGLU.so
+    LIBS += /usr/lib/libGLU.so
     LIBS += -lboost_system -frounding-math -lgmp -lQGLViewer -lCGAL
     DEFINES += CGAL_DEFINED
     QMAKE_CXXFLAGS += -std=c++11 -g
