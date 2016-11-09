@@ -1,40 +1,39 @@
 #ifndef CONFLICTGRAPH_H
 #define CONFLICTGRAPH_H
 
-#include <eigen3/Eigen/Dense>
-#include <eigen3/Eigen/LU>
 #include "lib/dcel/drawable_dcel.h"
-#include "stdlib.h"
-
+#include <stdlib.h>
+#include "GUI/mainwindow.h"
+#include <algorithm>
+#include <random>
+#include <eigen3/Eigen/Dense>
 
 class ConflictGraph
 {
 public:
-
-    ConflictGraph(DrawableDcel* dcel, std::vector<Pointd>&verVect);
+    ConflictGraph(DrawableDcel* dcel, const std::vector<Pointd> &vectPoint);
     ~ConflictGraph();
     void inizialize();
-    bool isVisible(Pointd point, Dcel::Face * face);
-    std::set<Dcel::Face*>* getFacesVisible(Pointd &vertex);
-    std::set<Pointd>* getVerticesVisible(Dcel::Face* face);
+    bool faceVisibleFromPoint(const Pointd point, Dcel::Face * face);
+    std::set<Dcel::Face*>* findVisibleFaces(Pointd &point);
+    std::set<Pointd>* findVisiblePoints(Dcel::Face* face);
+    std::map<Dcel::HalfEdge*, std::set<Pointd>*>mergeVerticesVisible(std::list<Dcel::HalfEdge*> horizon);
     void deleteFaces(std::set<Dcel::Face *> *faces);
-    void deletePoint(Pointd &vertex);
-    void updateConflictGraph(Dcel::Face * face, std::set<Pointd> * candidateVertices);
+    void deletePoint(Pointd &point);
+    void updateConflictGraph(Dcel::Face * face, const Pointd point);
+
+
+  private:
+
+      DrawableDcel* dcel;
+      std::vector<Pointd> vectPoint;
+      std::map<Dcel::Face*, std::set<Pointd>*> p_graph;
+      std::map<Pointd ,std::set<Dcel::Face*>*> f_graph;
+
+      void addFConflict_p(Pointd point, Dcel::Face* face);
+      void addPConflict_f(Dcel::Face* face, Pointd point);
 
 
 
-private:
-
-    DrawableDcel * dcel;
-    std::vector<Pointd> verVect;
-    std::map<Dcel::Face*, std::set<Pointd>*> v_graph;
-    std::map<Pointd ,std::set<Dcel::Face*>*> f_graph;
-
-    void addFConflict_v(Pointd point, Dcel::Face* face);
-    void addVConflict_f(Dcel::Face* face, Pointd point);
-
-
-
-};
-
+  };
 #endif // CONFLICTGRAPH_H
