@@ -58,9 +58,9 @@ void ConvexHullManager::on_convexHullPushButton_clicked() {
             /********************************
              * Begin Convex Hull Algorithm  *
              ********************************/
-            bool isClicked = ui->showPhasesCheckBox->isChecked();
-            Convexhullbuilder chb(dcel,isClicked);
-            chb.build(mainWindow);
+            bool isChecked=ui->showPhasesCheckBox->isChecked();
+            ConvexhullBuilder* convexhullBuilder=new ConvexhullBuilder(dcel,mainWindow,isChecked);
+            convexhullBuilder->buildConvexHull();
 
             /********************************
              * End Convex Hull Algorithm    *
