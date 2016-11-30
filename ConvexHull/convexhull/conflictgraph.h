@@ -15,9 +15,9 @@ public:
     ~ConflictGraph();
     void inizialize();
     bool faceVisibleFromPoint(const Pointd point, Dcel::Face * face);
-    std::set<Dcel::Face*>* findVisibleFaces(Pointd &point);
+    std::set<Dcel::Face*>* findVisibleFaces(const Pointd &point);
     std::set<Pointd>* findVisiblePoints(Dcel::Face* face);
-    std::map<Dcel::HalfEdge*, std::set<Pointd>*>mergeVerticesVisible(std::list<Dcel::HalfEdge*> horizon);
+    std::map<Dcel::HalfEdge*, std::set<Pointd>*>mergeVerticesVisible(const std::list<Dcel::HalfEdge*> &horizon);
     void deleteFaces(std::set<Dcel::Face *> *faces);
     void deletePoint(Pointd &point);
     void updateConflictGraph(Dcel::Face * face, const Pointd point);
@@ -30,8 +30,8 @@ public:
       std::map<Dcel::Face*, std::set<Pointd>*> p_graph;
       std::map<Pointd ,std::set<Dcel::Face*>*> f_graph;
 
-      void addFConflict_p(Pointd point, Dcel::Face* face);
-      void addPConflict_f(Dcel::Face* face, Pointd point);
+      void addFConflict_p(const Pointd &point, Dcel::Face* face);
+      void addPConflict_f(Dcel::Face* face, const Pointd &point);
 
 
 

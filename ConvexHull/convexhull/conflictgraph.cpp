@@ -62,7 +62,7 @@ void ConflictGraph::inizialize(){
  * @param point punto che serve per modificare la sua conflict list
  * @param face faccia da aggiungere alla conflict list
  */
-void ConflictGraph::addFConflict_p(Pointd point , Dcel::Face* face){
+void ConflictGraph::addFConflict_p(const Pointd &point , Dcel::Face* face){
 
     //se non ha elementi la inizializzo con un set vuoto
     if(this->f_graph[point]==nullptr){
@@ -80,7 +80,7 @@ void ConflictGraph::addFConflict_p(Pointd point , Dcel::Face* face){
  * @param face faccia per modificare la sua conflict list
  */
 
-void ConflictGraph::addPConflict_f(Dcel::Face* face, Pointd point){
+void ConflictGraph::addPConflict_f(Dcel::Face* face, const Pointd &point){
 
     //se non ha elementi la inizializzo con un set vuoto
     if(this->p_graph[face]==nullptr){
@@ -97,7 +97,7 @@ void ConflictGraph::addPConflict_f(Dcel::Face* face, Pointd point){
  * @param punto point
  * @return set di facce visibili dal punto
  */
-std::set<Dcel::Face*>* ConflictGraph::findVisibleFaces(Pointd &point){
+std::set<Dcel::Face*>* ConflictGraph::findVisibleFaces(const Pointd &point){
 
     std::set<Dcel::Face*> *faces=this->f_graph[point];
 
@@ -141,7 +141,7 @@ std::set<Pointd>* ConflictGraph::findVisiblePoints(Dcel::Face* face){
  * @return mappa che associa i punti visibili a un half edge
  */
 
-std::map<Dcel::HalfEdge*, std::set<Pointd>*> ConflictGraph::mergeVerticesVisible(std::list<Dcel::HalfEdge*> horizon){
+std::map<Dcel::HalfEdge*, std::set<Pointd>*> ConflictGraph::mergeVerticesVisible(const std::list<Dcel::HalfEdge*> &horizon){
 
     std::map<Dcel::HalfEdge *, std::set<Pointd>*> mapResult;
 

@@ -7,8 +7,8 @@ CONFIG(debug, debug|release){
 
 unix:!macx{
     LIBS += /usr/lib/libGLU.so
-    LIBS+=/usr/lib/libQGLViewer-qt5.so
-    LIBS+=/usr/lib/libboost_system.so.1.62.0
+    LIBS+= /usr/local/lib/libQGLViewer-qt5.so.2.6.4
+    LIBS +=/lib/libboost_system.so.1.62.0
     LIBS += -frounding-math -lgmp -lCGAL
     DEFINES += CGAL_DEFINED
     QMAKE_CXXFLAGS += -std=c++11 -g
